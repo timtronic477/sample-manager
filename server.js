@@ -19,15 +19,31 @@ app.use(express.json())
 
 
 app.get("/", async(req, res) =>{
-    const lotNumber = await db.collection('samples').find().toArray()
-    const recommendedDilution = await db .collection('samples').find().toArray()
-    const status = await db .collection('samples').find().toArray()
-    const vendor = await db .collection('samples').find().toArray()
-    const type = await db .collection('samples').find().toArray()
-    const harvestDate = await db .collection('samples').find().toArray()
-    const volume = await db .collection('samples').find().toArray()
-    const dilutionFacotor = await db .collection('samples').find().toArray()
-    const location = await db .collection('samples').find().toArray()
 
-    response.render("index.ejs", { lot: lotNumber })
+    const samples = await db.collection("samples").find().toArray()
+    // const lotNumber = await db.collection('samples').find().toArray()
+    // const recommendedDilution = await db .collection('samples').find().toArray()
+    // const status = await db .collection('samples').find().toArray()
+    // const vendor = await db .collection('samples').find().toArray()
+    // const type = await db .collection('samples').find().toArray()
+    // const harvestDate = await db .collection('samples').find().toArray()
+    // const volume = await db .collection('samples').find().toArray()
+    // const dilutionFacotor = await db .collection('samples').find().toArray()
+    // const location = await db .collection('samples').find().toArray()
+
+    res.render("index.ejs", { sammples: samples})
+})
+
+
+app.post("/addSample", (req, res) => {
+    db.collection("samples").insertOne({type: request.body.type, lotNumber: req.body.lotNumber, status: req.body.status})
+    .then(res => {
+        console.log('Sample Added')
+        res.redirect("/")
+    })
+    .catch(error => console.log(error))
+})
+
+app.listen(process.env.PORT || PORT, ()=>{
+    console.log(`Server running on ${PORT}`)
 })
